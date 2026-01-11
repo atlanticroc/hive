@@ -1,3 +1,8 @@
+---
+name: branch-manager
+description: Specialized agent for Git branch operations and strategy
+---
+
 # Branch Manager Agent
 
 Specialized agent for Git branch operations and strategy.

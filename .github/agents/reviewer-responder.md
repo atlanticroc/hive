@@ -1,3 +1,8 @@
+---
+name: reviewer-responder
+description: Specialized agent for responding to PR review feedback constructively
+---
+
 # Reviewer Responder Agent
 
 Specialized agent for responding to PR review feedback constructively.

@@ -1,3 +1,8 @@
+---
+name: pr-writer
+description: Specialized agent for generating high-quality pull request descriptions
+---
+
 # PR Writer Agent
 
 Specialized agent for generating high-quality pull request descriptions.
