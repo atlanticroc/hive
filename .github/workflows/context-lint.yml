@@ -1,0 +1,86 @@
+name: Context Lint
+
+on:
+  push:
+    paths:
+      - '.context/**'
+  pull_request:
+    paths:
+      - '.context/**'
+
+jobs:
+  lint-context:
+    name: Validate Context Files
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check .context/ file sizes
+        run: |
+          MAX_LINES=500
+          EXIT_CODE=0
+          
+          for file in .context/*.md; do
+            if [ -f "$file" ]; then
+              lines=$(wc -l < "$file")
+              if [ "$lines" -gt "$MAX_LINES" ]; then
+                echo "❌ $file has $lines lines (max: $MAX_LINES)"
+                EXIT_CODE=1
+              else
+                echo "✅ $file has $lines lines"
+              fi
+            fi
+          done
+          
+          exit $EXIT_CODE
+
+      - name: Validate required context files exist
+        run: |
+          REQUIRED_FILES=(
+            ".context/INDEX.md"
+            ".context/handoff.md"
+            ".context/notes.md"
+            ".context/todo.md"
+            ".context/changelog.md"
+            ".context/runbook.md"
+          )
+          
+          EXIT_CODE=0
+          
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ -f "$file" ]; then
+              echo "✅ $file exists"
+            else
+              echo "❌ $file is missing"
+              EXIT_CODE=1
+            fi
+          done
+          
+          exit $EXIT_CODE
+
+      - name: Check for sensitive data patterns
+        run: |
+          # Basic check for common sensitive patterns in context files
+          PATTERNS=(
+            "password.*=.*['\"]"
+            "api[_-]?key.*=.*['\"]"
+            "secret.*=.*['\"]"
+            "token.*=.*['\"]"
+          )
+          
+          EXIT_CODE=0
+          
+          for pattern in "${PATTERNS[@]}"; do
+            if grep -riE "$pattern" .context/ 2>/dev/null; then
+              echo "❌ Potential sensitive data found matching: $pattern"
+              EXIT_CODE=1
+            fi
+          done
+          
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "✅ No obvious sensitive data patterns found"
+          fi
+          
+          exit $EXIT_CODE
