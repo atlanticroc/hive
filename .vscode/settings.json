@@ -1,0 +1,11 @@
+# Add the same workbench.ColorCustomizations to both settings and the default profile
+{
+  "workbench.colorCustomizations": {
+    "statusBar.background": "#333333",
+    "statusBar.foreground": "#ffffff",
+    "statusBar.debuggingBackground": "#333333",
+    "statusBar.noFolderBackground": "#333333"
+  }
+}
+
+
